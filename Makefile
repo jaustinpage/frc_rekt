@@ -25,9 +25,13 @@ pytest:
 format:
 	yapf --in-place --recursive --style pep8 ./frc-rekt/
 
+.PHONY: check_format
+check_format:
+	if [ -z "`yapf --recursive --style pep8 --diff ./frc-rekt/`" ]; then exit 0; else exit 1; fi
+
 .PHONY: init
 init: deps_ubuntu create_venv
 
 .PHONY: test
-test: clean format pytest
+test: format pytest clean
 
