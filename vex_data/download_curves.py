@@ -10,7 +10,6 @@ import zipfile
 from pathlib import Path
 from urllib.parse import urlparse
 
-
 # yapf: disable
 files = {'cim':      ['https://content.vexrobotics.com/motors/217-2000-cim/cim-motor-curve-data-20151104.csv',
                       'https://content.vexrobotics.com/motors/217-2000-cim/cim-peak-power-data-20151104.csv',
@@ -25,6 +24,7 @@ files = {'cim':      ['https://content.vexrobotics.com/motors/217-2000-cim/cim-m
                       'https://content.vexrobotics.com/motors/217-3351-bag/bag-peak-power-data-20151207.csv',
                       'https://content.vexrobotics.com/motors/217-3351-bag/bag-locked-rotor-data-20151207.zip']}
 # yapf: enable
+
 
 def unzip_file(path):
     path = Path(path)
