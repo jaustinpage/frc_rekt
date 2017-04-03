@@ -15,15 +15,15 @@ python_deps:
 
 .PHONY: clean
 clean:
-	py3clean
+	py3clean ./frc-rekt/
 
 .PHONY: pytest
 pytest:
-	pytest --color='yes' ./frc-rekt
+	pytest --color='yes' ./frc-rekt/
 
 .PHONY: format
 format:
-	yapf --in-place --recursive --style pep8 ./frc-rekt
+	yapf --in-place --recursive --style pep8 ./frc-rekt/
 
 .PHONY: init
 init: deps_ubuntu create_venv

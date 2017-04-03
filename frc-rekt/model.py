@@ -18,14 +18,13 @@ pd.set_option('expand_frame_repr', False)
 poly = np.polynomial.polynomial
 
 
-
-
 class Battery(object):
-    def __init__(self, nominal_voltage=12.8, 
-
+    def __init__(self, nominal_voltage=12.8):
+        pass
 
     def generate_equations(self):
-        
+        pass
+
 
 # Robot constants
 class TankRobot(object):
@@ -98,7 +97,7 @@ class TankRobot(object):
 
         motor_curve['speed'] = motor_curve['speed'] / 60.0
 
-        motor_curve['total_current'] = motor_curve['current'] * self.motors 
+        motor_curve['total_current'] = motor_curve['current'] * self.motors
         motor_curve['battery_voltage'] = self.battery_voltage_under_load(
             motor_curve['total_current'])
 
@@ -140,8 +139,8 @@ class TankRobot(object):
 
     def side_wheel_force(self, motor_voltage, motor_torque):
         # wheel_force = torque / distance
-        wheel_force = self.wheel_torque(motor_voltage,
-                                        motor_torque) / (self.wheel_diameter/2)
+        wheel_force = self.wheel_torque(motor_voltage, motor_torque) / (
+            self.wheel_diameter / 2)
         return wheel_force
 
     def total_wheel_force(self, motor_voltage, motor_torque):
@@ -175,12 +174,17 @@ class TankRobot(object):
             coefs = poly.polyfit(x=x, y=y, deg=2)
             feq = poly.Polynomial(coefs)
             print('function for limiting drivetrain power')
-            print('if motor_revolutions_per_second < {transition}:'.format(transition=transition))
-            print('    max_pwm = {0} + {1} * motor_revolutions_per_second + {2} * (motor_revolutions_per_second*motor_revolutions_per_second)'.format(coefs[0], coefs[1], coefs[2]))
+            print('if motor_revolutions_per_second < {transition}:'.format(
+                transition=transition))
+            print(
+                '    max_pwm = {0} + {1} * motor_revolutions_per_second + {2} * (motor_revolutions_per_second*motor_revolutions_per_second)'.
+                format(coefs[0], coefs[1], coefs[2]))
             print('else:')
             print('    max_pwm = 1')
             print('return max_pwm')
-            print('piecewise transition point: {transition} motor_revolutions/second'.format(transition=transition))
+            print(
+                'piecewise transition point: {transition} motor_revolutions/second'.
+                format(transition=transition))
             print(feq)
         except IndexError:
             # if we get an index error, it means that we do not need to limit power at any point on the curve. So, we set a pass-thru function
@@ -188,8 +192,6 @@ class TankRobot(object):
             feq = lambda x: 1
             coefs = [0, 1, 0]
             x = [0]
-
-
 
         def max_pwm_allowed(speed):
             if speed < x[::-1][0]:
@@ -216,7 +218,6 @@ class TankRobot(object):
         geq = poly.Polynomial(coefs)
         self.motor_curve['robot_acceleration_fit'] = geq(
             self.motor_curve[['speed']])
-
 
         # pro-rate the physical acceleration 
         max_accel = self.motor_curve['robot_acceleration'].iloc[0]
@@ -261,11 +262,17 @@ class TankRobot(object):
 #print(cim_curve)
 #cim_curve.plot.line(x=0)
 
-robot = TankRobot(gear_ratio=5.1, mass=134, battery_internal_resistance=0.011, battery_nominal_voltage=13.0, battery_min_allowed_voltage=6.5 )
+robot = TankRobot(
+    gear_ratio=5.1,
+    mass=134,
+    battery_internal_resistance=0.011,
+    battery_nominal_voltage=13.0,
+    battery_min_allowed_voltage=6.5)
 print(robot)
 #robot.motor_curve.to_csv('test_data.csv')
 robot.motor_curve[[
-    'speed', 'robot_velocity', 'robot_acceleration', 'robot_acceleration_fit', 'robot_acceleration_targets'
+    'speed', 'robot_velocity', 'robot_acceleration', 'robot_acceleration_fit',
+    'robot_acceleration_targets'
 ]].plot(x='speed')
 robot.motor_curve[[
     'speed', 'robot_max_pwm_allowed', 'robot_max_allowed_pwm_equation'

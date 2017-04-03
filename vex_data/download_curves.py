@@ -11,18 +11,20 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 
-files = {'cim':     ['https://content.vexrobotics.com/motors/217-2000-cim/cim-motor-curve-data-20151104.csv',
-                     'https://content.vexrobotics.com/motors/217-2000-cim/cim-peak-power-data-20151104.csv',
-                     'https://content.vexrobotics.com/motors/217-2000-cim/cim-locked-rotor-data-20151104.zip'],
-        'mini-cim': ['https://content.vexrobotics.com/motors/217-3371-mini-cim/mini-cim-peak-power-data-20151207.csv',
-                     'https://content.vexrobotics.com/motors/217-3371-mini-cim/mini-cim-peak-power-data-20151207.csv',
-                     'https://content.vexrobotics.com/motors/217-3371-mini-cim/mini-cim-locked-rotor-data-20151209-2.zip'],
-        '775pro':   ['https://content.vexrobotics.com/motors/217-4347-775pro/775pro-motor-curve-data-20151208.csv',
-                     'https://content.vexrobotics.com/motors/217-4347-775pro/775pro-peak-power-data-20151210.csv',
-                     'https://content.vexrobotics.com/motors/217-4347-775pro/775pro-locked-rotor-data-20151209.zip'],
-        'bag':      ['https://content.vexrobotics.com/motors/217-4347-775pro/775pro-motor-curve-data-20151208.csv',
-                     'https://content.vexrobotics.com/motors/217-4347-775pro/775pro-peak-power-data-20151210.csv',
-                     'https://content.vexrobotics.com/motors/217-4347-775pro/775pro-locked-rotor-data-20151209.zip']}  # yapf: disable
+# yapf: disable
+files = {'cim':      ['https://content.vexrobotics.com/motors/217-2000-cim/cim-motor-curve-data-20151104.csv',
+                      'https://content.vexrobotics.com/motors/217-2000-cim/cim-peak-power-data-20151104.csv',
+                      'https://content.vexrobotics.com/motors/217-2000-cim/cim-locked-rotor-data-20151104.zip'],
+         'mini-cim': ['https://content.vexrobotics.com/motors/217-3371-mini-cim/mini-cim-motor-curve-data-20151207.csv',
+                      'https://content.vexrobotics.com/motors/217-3371-mini-cim/mini-cim-peak-power-data-20151207.csv',
+                      'https://content.vexrobotics.com/motors/217-3371-mini-cim/mini-cim-locked-rotor-data-20151209-2.zip'],
+         '775pro':   ['https://content.vexrobotics.com/motors/217-4347-775pro/775pro-motor-curve-data-20151208.csv',
+                      'https://content.vexrobotics.com/motors/217-4347-775pro/775pro-peak-power-data-20151210.csv',
+                      'https://content.vexrobotics.com/motors/217-4347-775pro/775pro-locked-rotor-data-20151209.zip'],
+         'bag':      ['https://content.vexrobotics.com/motors/217-3351-bag/bag-motor-curve-data-20151207.csv',
+                      'https://content.vexrobotics.com/motors/217-3351-bag/bag-peak-power-data-20151207.csv',
+                      'https://content.vexrobotics.com/motors/217-3351-bag/bag-locked-rotor-data-20151207.zip']}
+# yapf: enable
 
 def unzip_file(path):
     path = Path(path)
