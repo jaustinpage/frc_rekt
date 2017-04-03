@@ -5,6 +5,11 @@ machine:
 dependencies:
   post:
     - make download_curves
+  cache_directories:
+    - "vex_data/cim/"
+    - "vex_data/mini-cim/"
+    - "vex_data/775pro/"
+    - "vex_data/bag/"
 
 test:
   override:
