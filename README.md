@@ -24,18 +24,18 @@ Depending on your os, you may have to install these yourself.
 Setup
 -----
 
-1. Install the dependencies listed above, e.g. 
-    sudo apt-get install python3 python3-pip python3-venv python3-pandas
-1. Create a virtual environment
-    python3 -m venv ./env  # Keeps your packages separate
-1. Activate the virtual environment
-    source env/bin/activate
-1. Install python dependencies
+1. Install the dependencies listed above, e.g. `
+    sudo apt-get install python3 python3-pip python3-venv python3-pandas`
+1. Create a virtual environment `
+    python3 -m venv ./env  # Keeps your packages separate`
+1. Activate the virtual environment `
+    source env/bin/activate`
+1. Install python dependencies `
     pip3 install --upgrade pip
-    pip3 install -r requirements.txt
-1. Download motor curve data from vex
+    pip3 install -r requirements.txt`
+1. Download motor curve data from vex `
     cd vex_data/
-    ./download_curves.py
+    ./download_curves.py`
 
 Running
 -------
