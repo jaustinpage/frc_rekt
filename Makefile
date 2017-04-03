@@ -37,3 +37,7 @@ test: check_format pytest
 
 .PHONY: prep
 prep: format pytest clean
+
+.PHONY: download_curves
+download_curves:
+	cd vex_data/; ./download_curves.py; cd -
