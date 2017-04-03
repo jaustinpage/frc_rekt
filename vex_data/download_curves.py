@@ -26,6 +26,15 @@ files = {'cim':      ['https://content.vexrobotics.com/motors/217-2000-cim/cim-m
 # yapf: enable
 
 
+def file_exists(file_path):
+    try:
+        if os.stat("file").st_size != 0:
+            return True
+    except FileNotFoundError:
+        pass
+    return False
+
+
 def unzip_file(path):
     path = Path(path)
     if path.suffix == '.zip':
@@ -35,15 +44,16 @@ def unzip_file(path):
 
 
 def download_file(motor, url):
+    # Gets just the '*.csv' part
     fname = Path(urlparse(url).path).name
     fpath = '{0}/{1}'.format(motor, fname)
 
     logging.info('Downloading %s to %s', url, fpath)
 
-    r = requests.get(url)
-    # Gets just the '*.zip' part
-    with open(fpath, 'wb') as dfile:
-        dfile.write(r.content)
+    if not file_exists(fname):
+        r = requests.get(url)
+        with open(fpath, 'wb') as dfile:
+            dfile.write(r.content)
     return fpath
 
 
