@@ -31,7 +31,7 @@ Setup
 1. Activate the virtual environment `
     source env/bin/activate`
 1. Install python dependencies `
-    pip3 install --upgrade pip
+    pip3 install --upgrade pip;
     pip3 install -r requirements.txt`
 1. Download motor curve data from vex `
     cd vex_data/
