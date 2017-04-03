@@ -27,6 +27,7 @@ class Battery(object):
 
 
 # Robot constants
+# TODO: Refactor with new motor class
 class TankRobot(object):
     def __init__(self,
                  mass=154,
