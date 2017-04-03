@@ -1,8 +1,0 @@
-Get curves from http://motors.vex.com/
-
-setup:
-
-to prep curve csv file for use:
-1) download curve csv
-2) set the first row to `speed,torque,current,supplied_power,output_power,efficiency,power_dissipation` to make the fields easier to use. code assumes these headers.
-3) remember that the units are `revolution / minute, Newton * meter, Amp, Watt, Watt, %, Watt` when you are using the curves
