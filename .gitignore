@@ -90,3 +90,6 @@ ENV/
 
 # Motor curves
 vex_data
+
+# VIM .swp files
+*.swp
