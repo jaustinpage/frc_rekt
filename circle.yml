@@ -1,0 +1,7 @@
+machine:
+  post:
+    - pyenv global 3.6.1
+
+test:
+  override:
+    - make test

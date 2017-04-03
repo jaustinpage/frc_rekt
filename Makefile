@@ -33,5 +33,7 @@ check_format:
 init: deps_ubuntu create_venv
 
 .PHONY: test
-test: format pytest clean
+test: check_format pytest
 
+.PHONY: prep
+prep: format pytest clean
