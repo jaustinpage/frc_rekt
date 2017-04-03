@@ -1,6 +1,10 @@
 machine:
+  python:
+    version: 3.6.0 
+
+dependencies:
   post:
-    - pyenv global 3.6.1
+    - make download_curves
 
 test:
   override:
