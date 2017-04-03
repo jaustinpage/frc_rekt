@@ -1,6 +1,8 @@
 frc-rekt - FRC Robot Electrical and Kinematic Tool
 ==================================================
 
+![CircleCI Build Status](https://circleci.com/gh/jaustinpage/frc-rekt.svg?style=shield&circle-token=ce65d30cde7772fda8b5a2f93fa28ff9efa42fb4)
+
 This is a tool for modeling the electrical and kinematic properties of an 
 FRC robot. It aims to make predictions about how a robot's electrical system
 would respond to loads, in particular motors, and predict the effects of 
