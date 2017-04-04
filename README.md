@@ -60,5 +60,5 @@ Use pytest to run tests. `pytest --color='yes' ./`
 Other
 -----
 
-Find a bug? Algorithm doesn't work? Make a bug on github, and we will try to
+Find a bug? Algorithm doesn't work? Make an issue on github, and we will try to
 fix it.
