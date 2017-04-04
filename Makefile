@@ -30,7 +30,7 @@ format:
 
 .PHONY: lint
 lint:
-	pylint ./frc_rekt/
+	pylint --rcfile=setup.cfg --reports=n ./frc_rekt/
 
 .PHONY: codestyle
 codestyle:
@@ -49,7 +49,7 @@ pytest:
 prep: format lint codestyle pytest clean
 
 .PHONY: test
-test: check_format lint pytest
+test: check_format lint codestyle pytest
 
 .PHONY: update_branch
 update_branch:
@@ -57,4 +57,4 @@ update_branch:
 
 .PHONY: add_words_to_pylint
 add_words_to_pylint:
-	pylint --spelling-store-unknown-words=yes ./frc_rekt/
+	pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n ./frc_rekt/

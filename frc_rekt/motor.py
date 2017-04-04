@@ -80,14 +80,13 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
 
     def _get_curve_frame(self):
         file_path, encoding = self._get_file_name()
-        try:
-            self.logger.debug('Opening curve: %s', file_path)
-            curve_frame = pd.DataFrame(
-                pd.read_csv(file_path, encoding=encoding)
-            )  # The cast to DataFrame is due to bug: https://github.com/PyCQA/pylint/issues/1161
-        except KeyError as e:
-            raise e
+
+        self.logger.debug('Opening curve: %s', file_path)
+        curve_frame = pd.DataFrame(
+            pd.read_csv(file_path, encoding=encoding)
+        )  # The cast to DataFrame is due to bug: https://github.com/PyCQA/pylint/issues/1161
         self.logger.debug('Opened Curve: %s', curve_frame)
+
         # Rename columns
         curve_frame.rename(
             columns={
