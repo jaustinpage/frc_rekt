@@ -89,7 +89,7 @@ ENV/
 .ropeproject
 
 # Motor curves
-vex_data
+data/vex
 
 # VIM .swp files
 *.swp
