@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-
-""" Helper functions 
+""" Helper functions
 
 Use these so we don't write duplicate code.
 
