@@ -10,6 +10,8 @@ import magic
 import math
 import matplotlib.pyplot as plt
 
+from helpers import get_file_encoding, plot_fit
+
 # Pandas options
 pd.set_option('max_rows', 121)
 pd.set_option('max_columns', 132)
@@ -19,25 +21,15 @@ pd.set_option('expand_frame_repr', False)
 poly = np.polynomial.polynomial
 
 
-class Motor(object):
-    def __init__(self, motor_type='cim', speed=0.0, voltage=0.0):
+class MainBreaker(object):
+    def __init__(self, ambient_temp=25):
         self.logger = logging.getLogger(__name__)
-        self.motor_type = motor_type
-        self.speed = speed
-        self.voltage = voltage
-        self.motor_curve_voltage = 12.0
-        self.stall_voltages = [2, 4, 6, 8, 10, 12]
-        self.curve_frame = self._get_curve_frame()
-        self.stall_frames = self._get_stall_frames()
+        self.ambient_temp = ambient_temp
+        self.temp_derate_frame = self._get_temp_derate_frame()
+        self.trip_time_frame = self._get_trip_time_frame()
         self._generate_functions()
         self.logger.debug(
-            '{motor_type} Motor created'.format(motor_type=self.motor_type))
-
-    @staticmethod
-    def _get_file_encoding(file_path):
-        m = magic.Magic(mime_encoding=True)
-        encoding = m.from_file(file_path)
-        return encoding
+            'Main Breaker created at {0} degrees C'.format(self.ambient_temp))
 
     def _get_file_name(self, voltage=None):
         '''
@@ -69,7 +61,7 @@ class Motor(object):
             data_folder=data_folder,
             motor_type=self.motor_type,
             file_name=file_name)
-        encoding = self._get_file_encoding(file_path)
+        encoding = get_file_encoding(file_path)
         logging.debug(
             'file_path: {0}, encoding: {1}'.format(file_path, encoding))
         return file_path, encoding
@@ -140,12 +132,6 @@ class Motor(object):
         self.voltage_scaled_torque = self._generate_voltage_scaled_function(
             'torque')
 
-    @staticmethod
-    def _plot_fit(dataframe, fit_func, x_label, y_label):
-        dataframe['fit'] = fit_func(dataframe[x_label])
-        plot_df = dataframe.loc[:, [x_label, y_label, 'fit']]
-        plot_df.plot(x=x_label)
-
     def _generate_basic_function(self, y_label, plot=False):
         x = self.curve_frame['speed'].values
         y = self.curve_frame[y_label].values
@@ -153,7 +139,7 @@ class Motor(object):
         coefs = poly.polyfit(x=x, y=y, deg=1)
         current_func = poly.Polynomial(coefs)
         if plot:
-            self._plot_fit(self.curve_frame, current_func, 'speed', y_label)
+            plot_fit(self.curve_frame, current_func, 'speed', y_label)
         return current_func
 
     def _choose_stall_indexes(self, time_index=None):
@@ -210,7 +196,7 @@ class Motor(object):
         if plot:
             predict_df = [{'voltage': 13}, {'voltage': 14}]
             stall_df = stall_df.append(predict_df, ignore_index=True)
-            self._plot_fit(stall_df, vs_func, 'voltage', percent_label)
+            plot_fit(stall_df, vs_func, 'voltage', percent_label)
         return vs_func
 
 

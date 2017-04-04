@@ -19,8 +19,8 @@ def motor(motor_type):
 
 
 def test_get_voltage_scaled_current(motor):
-    motor.generate_voltage_scaled_function('current', plot=True)
+    motor._generate_voltage_scaled_function('current', plot=True)
 
 
 def test_get_voltage_scaled_torque(motor):
-    motor.generate_voltage_scaled_function('torque', plot=True)
+    motor._generate_voltage_scaled_function('torque', plot=True)
