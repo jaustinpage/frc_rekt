@@ -1,6 +1,10 @@
 .PHONY: deps_ubuntu
 deps_ubuntu:
-	sudo apt-get install python3 python3-pip python3-venv python3-pandas
+	sudo apt-get install python3 python3-pip python3-venv python3-pandas libenchant1c2a
+
+.PHONY: deps_circle
+deps_circle:
+	sudo apt-get install libenchant1c2a
 
 .PHONY: create_venv
 create_venv:
