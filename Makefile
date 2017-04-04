@@ -41,3 +41,7 @@ prep: format pytest clean
 .PHONY: download_curves
 download_curves:
 	cd data/vex; ./download_curves.py; cd -
+
+.PHONY: update_branch
+update_branch:
+	git pull --rebase origin master
