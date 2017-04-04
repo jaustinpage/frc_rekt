@@ -27,18 +27,19 @@ class Motor(object):
         self.voltage = voltage
         self.motor_curve_voltage = 12.0
         self.stall_voltages = [2, 4, 6, 8, 10, 12]
-        self.curve_frame = self.get_curve_frame()
-        self.stall_frames = self.get_stall_frames()
-        self.generate_functions()
+        self.curve_frame = self._get_curve_frame()
+        self.stall_frames = self._get_stall_frames()
+        self._generate_functions()
         self.logger.debug(
             '{motor_type} Motor created'.format(motor_type=self.motor_type))
 
-    def get_file_encoding(self, file_path):
+    @staticmethod
+    def _get_file_encoding(file_path):
         m = magic.Magic(mime_encoding=True)
         encoding = m.from_file(file_path)
         return encoding
 
-    def get_file_name(self, voltage=None):
+    def _get_file_name(self, voltage=None):
         '''
         returns the motor curve if no voltage is supplied, else
         returns locked rotor test data for that voltage
@@ -68,13 +69,13 @@ class Motor(object):
             data_folder=data_folder,
             motor_type=self.motor_type,
             file_name=file_name)
-        encoding = self.get_file_encoding(file_path)
+        encoding = self._get_file_encoding(file_path)
         logging.debug(
             'file_path: {0}, encoding: {1}'.format(file_path, encoding))
         return file_path, encoding
 
-    def get_curve_frame(self):
-        file_path, encoding = self.get_file_name()
+    def _get_curve_frame(self):
+        file_path, encoding = self._get_file_name()
         try:
             self.logger.debug(
                 'Opening curve: {file_path}'.format(file_path=file_path))
@@ -102,10 +103,10 @@ class Motor(object):
         self.logger.debug('Motor Curve: {0}'.format(curve_frame))
         return curve_frame
 
-    def get_stall_frames(self):
+    def _get_stall_frames(self):
         stall_frames = {}
         for voltage in self.stall_voltages:
-            file_path, encoding = self.get_file_name(voltage=voltage)
+            file_path, encoding = self._get_file_name(voltage=voltage)
             try:
                 stall_frame = pd.read_csv(file_path, encoding=encoding)
             except KeyError as e:
@@ -131,26 +132,31 @@ class Motor(object):
         self.logger.debug('Stall frames: {0}'.format(stall_frames))
         return stall_frames
 
-    def generate_functions(self):
-        self.current_func = self.generate_basic_function('current')
-        self.torque_func = self.generate_basic_function('torque')
+    def _generate_functions(self):
+        self.current_func = self._generate_basic_function('current')
+        self.torque_func = self._generate_basic_function('torque')
+        self.voltage_scaled_current = self._generate_voltage_scaled_function(
+            'current')
+        self.voltage_scaled_torque = self._generate_voltage_scaled_function(
+            'torque')
 
-    def plot_fit(self, dataframe, fit_func, x_label, y_label):
+    @staticmethod
+    def _plot_fit(dataframe, fit_func, x_label, y_label):
         dataframe['fit'] = fit_func(dataframe[x_label])
         plot_df = dataframe.loc[:, [x_label, y_label, 'fit']]
         plot_df.plot(x=x_label)
 
-    def generate_basic_function(self, y_label, plot=False):
+    def _generate_basic_function(self, y_label, plot=False):
         x = self.curve_frame['speed'].values
         y = self.curve_frame[y_label].values
 
         coefs = poly.polyfit(x=x, y=y, deg=1)
         current_func = poly.Polynomial(coefs)
         if plot:
-            self.plot_fit(self.curve_frame, current_func, 'speed', y_label)
+            self._plot_fit(self.curve_frame, current_func, 'speed', y_label)
         return current_func
 
-    def choose_stall_indexes(self, time_index=None):
+    def _choose_stall_indexes(self, time_index=None):
         time = [0]
         current = [0]
         voltage = [0]
@@ -188,10 +194,10 @@ class Motor(object):
         }
         return pd.DataFrame(stall_index)
 
-    def generate_voltage_scaled_function(self, y_label, plot=False):
+    def _generate_voltage_scaled_function(self, y_label, plot=False):
         percent_label = '{0}_percent'.format(y_label)
 
-        stall_df = self.choose_stall_indexes()
+        stall_df = self._choose_stall_indexes()
         y_label_12v = stall_df[y_label].iloc[6]
         stall_df[percent_label] = stall_df[y_label] / y_label_12v
         x = stall_df['voltage']
@@ -204,24 +210,24 @@ class Motor(object):
         if plot:
             predict_df = [{'voltage': 13}, {'voltage': 14}]
             stall_df = stall_df.append(predict_df, ignore_index=True)
-            self.plot_fit(stall_df, vs_func, 'voltage', percent_label)
+            self._plot_fit(stall_df, vs_func, 'voltage', percent_label)
         return vs_func
 
 
 def main():
     logging.basicConfig(level=logging.INFO)
     cim_motor = Motor(motor_type='cim')
-    cim_motor.generate_voltage_scaled_function('current', plot=True)
-    cim_motor.generate_voltage_scaled_function('torque', plot=True)
+    cim_motor._generate_voltage_scaled_function('current', plot=True)
+    cim_motor._generate_voltage_scaled_function('torque', plot=True)
     minicim_motor = Motor(motor_type='mini-cim')
-    minicim_motor.generate_voltage_scaled_function('current', plot=True)
-    minicim_motor.generate_voltage_scaled_function('torque', plot=True)
+    minicim_motor._generate_voltage_scaled_function('current', plot=True)
+    minicim_motor._generate_voltage_scaled_function('torque', plot=True)
     bag_motor = Motor(motor_type='bag')
-    bag_motor.generate_voltage_scaled_function('current', plot=True)
-    bag_motor.generate_voltage_scaled_function('torque', plot=True)
+    bag_motor._generate_voltage_scaled_function('current', plot=True)
+    bag_motor._generate_voltage_scaled_function('torque', plot=True)
     pro_motor = Motor(motor_type='775pro')
-    pro_motor.generate_voltage_scaled_function('current', plot=True)
-    pro_motor.generate_voltage_scaled_function('torque', plot=True)
+    pro_motor._generate_voltage_scaled_function('current', plot=True)
+    pro_motor._generate_voltage_scaled_function('torque', plot=True)
     plt.show()
 
 
