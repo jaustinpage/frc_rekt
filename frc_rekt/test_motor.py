@@ -1,26 +1,28 @@
+# -*- coding: UTF-8 -*-
+# pylint: disable=missing-docstring, protected-access, redefined-outer-name
 import pytest
 
-from motor import Motor
+from frc_rekt.motor import Motor
 
 
 @pytest.fixture(params=['cim', 'mini-cim', 'bag', '775pro'])
-def motor_type(request):
+def motor_types(request):
     return request.param
 
 
-# Make sure we can init before creating the motor generator
-def test_init(motor_type):
-    motor = Motor(motor_type)
+def test_init(motor_types):
+    """Test the creation of all motor types"""
+    Motor(motor_types)
 
 
 @pytest.fixture
-def motor(motor_type):
-    return Motor(motor_type)
+def motor(motor_types):
+    return Motor(motor_types)
 
 
 def test_get_voltage_scaled_current(motor):
-    motor._generate_voltage_scaled_function('current', plot=True)
+    motor._gen_voltage_scaled_func('current', plot=True)
 
 
 def test_get_voltage_scaled_torque(motor):
-    motor._generate_voltage_scaled_function('torque', plot=True)
+    motor._gen_voltage_scaled_func('torque', plot=True)

@@ -1,4 +1,4 @@
-frc-rekt - FRC Robot Electrical and Kinematic Tool
+frc_rekt - FRC Robot Electrical and Kinematic Tool
 ==================================================
 
 ![CircleCI Build Status](https://circleci.com/gh/jaustinpage/frc-rekt.svg?style=shield&circle-token=ce65d30cde7772fda8b5a2f93fa28ff9efa42fb4)

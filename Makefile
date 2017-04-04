@@ -4,14 +4,14 @@ deps_ubuntu:
 
 .PHONY: create_venv
 create_venv:
-	python3 -m venv ./env
-	echo "Run `source ./env/bin/activate` each time you begin work`"
+	python3 -m venv --clear ./env
+	echo "Run \`source ./env/bin/activate\` each time you begin work"
     
 .PHONY: python_deps
 python_deps:
-	echo "Run `source ./env/bin/activate`"
-	echo "Run `python3 -m pip install --upgrade pip`"
-	echo "Run `python3 -m pip install -r requirements.txt`"
+	echo "Run \`source ./env/bin/activate\`"
+	echo "Run \`python3 -m pip install --upgrade pip\`"
+	echo "Run \`python3 -m pip install -r requirements.txt\`"
 
 .PHONY: download_curves
 download_curves:
@@ -22,23 +22,23 @@ init: deps_ubuntu create_venv
 
 .PHONY: clean
 clean:
-	py3clean ./frc-rekt/
+	py3clean ./frc_rekt/
 
 .PHONY: format
 format:
-	yapf --in-place --recursive --style pep8 ./frc-rekt/
+	yapf --in-place --recursive --style pep8 ./frc_rekt/
 
 .PHONY: lint
 lint:
-	pylint ./frc-rekt/
+	pylint ./frc_rekt/
 
 .PHONY: check_format
 check_format:
-	if [ -z "`yapf --recursive --style pep8 --diff ./frc-rekt/`" ]; then exit 0; else exit 1; fi
+	if [ -z "`yapf --recursive --style pep8 --diff ./frc_rekt/`" ]; then exit 0; else exit 1; fi
 
 .PHONY: pytest
 pytest:
-	pytest --color='yes' ./frc-rekt/
+	pytest --color='yes' ./frc_rekt/
 
 .PHONY: prep
 prep: format lint pytest clean
@@ -49,3 +49,7 @@ test: check_format pytest
 .PHONY: update_branch
 update_branch:
 	git pull --rebase origin master
+
+.PHONY: add_words_to_pylint
+add_words_to_pylint:
+	pylint --spelling-store-unknown-words=yes ./frc_rekt/

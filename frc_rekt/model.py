@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
+# pylint: skip-file
 
 import collections
 import pandas as pd
@@ -188,7 +189,7 @@ class TankRobot(object):
                 format(transition=transition))
             print(feq)
         except IndexError:
-            # if we get an index error, it means that we do not need to limit power at any point on the curve. So, we set a pass-thru function
+            # if we get an index error, it means that we do not need to limit power at any point on the curve. So, we set a pass-through function
             print('Yay! No need to limit power. You got lucky this time...')
             feq = lambda x: 1
             coefs = [0, 1, 0]
@@ -225,7 +226,7 @@ class TankRobot(object):
         shift_amount = max_accel * self.reserve_acceleration
         coefs[0] = coefs[0] - shift_amount
 
-        # turn polynomial coeficients into usable function
+        # turn polynomial coefficients into usable function
         feq = poly.Polynomial(coefs)
 
         # add calculated accelerations to motor curve for comparison
