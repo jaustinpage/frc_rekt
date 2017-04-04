@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-""" Motor
+"""Model of an frc Motor.
 
 Models an frc motor. Uses data from motors.vex.com.
+
 """
 
 import logging
@@ -21,13 +22,23 @@ POLY = np.polynomial.polynomial
 
 
 class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-public-methods
-    """ Models a motor """
+    """Models a motor."""
 
     motor_types = ['cim', 'mini-cim', '775pro', 'bag']
     _stall_voltages = [2, 4, 6, 8, 10, 12]
     _motor_curve_voltage = 12.0
 
     def __init__(self, motor_type='cim', speed=0.0, voltage=0.0):
+        """Motor.
+
+        :param motor_type: The type of motor to model
+        :type motor_type: str
+        :param speed: The speed the motor is turning at
+        :type speed: float
+        :param voltage: The voltage being supplied to the motor
+        :type voltage: float
+
+        """
         self.logger = logging.getLogger(__name__)
         self.motor_type = motor_type
         self.speed = speed

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-""" Helper functions
+"""Helper functions.
 
 Use these so we don't write duplicate code.
 
@@ -10,9 +10,7 @@ import magic
 
 
 def get_file_encoding(file_path):
-    """returns encoding
-
-    returns the encoding of the file path.
+    """Return encoding for file path.
 
     :param file_path: Path to file
     :type file_path: str
@@ -26,9 +24,9 @@ def get_file_encoding(file_path):
 
 
 def plot_func(dataframe, func, x_label, y_label):
-    """plots best fit function
+    """Plot best fit function.
 
-    generates points using the function, and plots those points
+    Generates points using the function, and plots those points
     against the original data.
 
     :param dataframe: the dataframe of original data

@@ -178,20 +178,26 @@ class TankRobot(object):
             print('function for limiting drivetrain power')
             print('if motor_revolutions_per_second < {transition}:'.format(
                 transition=transition))
-            print(
-                '    max_pwm = {0} + {1} * motor_revolutions_per_second + {2} * (motor_revolutions_per_second*motor_revolutions_per_second)'.
-                format(coefs[0], coefs[1], coefs[2]))
+            print('    max_pwm = {0} + {1} * motor_revolutions_per_second \
+                        + {2} * (motor_revolutions_per_second*\
+                        motor_revolutions_per_second)'
+                  .format(coefs[0], coefs[1], coefs[2]))
             print('else:')
             print('    max_pwm = 1')
             print('return max_pwm')
-            print(
-                'piecewise transition point: {transition} motor_revolutions/second'.
-                format(transition=transition))
+            print('piecewise transition point: {transition} \
+                        motor_revolutions/second'
+                  .format(transition=transition))
             print(feq)
         except IndexError:
-            # if we get an index error, it means that we do not need to limit power at any point on the curve. So, we set a pass-through function
+            # if we get an index error, it means that we do not need to
+            # limit power at any point on the curve. So, we set a
+            # pass-through function
             print('Yay! No need to limit power. You got lucky this time...')
-            feq = lambda x: 1
+
+            def feq(x):
+                return 1
+
             coefs = [0, 1, 0]
             x = [0]
 
@@ -221,7 +227,7 @@ class TankRobot(object):
         self.motor_curve['robot_acceleration_fit'] = geq(
             self.motor_curve[['speed']])
 
-        # pro-rate the physical acceleration 
+        # pro-rate the physical acceleration
         max_accel = self.motor_curve['robot_acceleration'].iloc[0]
         shift_amount = max_accel * self.reserve_acceleration
         coefs[0] = coefs[0] - shift_amount
@@ -235,48 +241,48 @@ class TankRobot(object):
         return feq
 
 
-#class TankRobotController(object):
-#    def __init__(self, window=20, step=0.1):
-#        self.robot = TankRobot()
-#        self.window = window
-#        self.step = step
-#
-#    def __str__(self):
-#        params = {'window': self.window, 'step': self.step}
-#        return 'TankRobotController: {params}'.format(str(params))
-#
-#    def silly_controller(self, current_velocity, requested_velocity):
-#        return 1
+# class TankRobotController(object):
+#     def __init__(self, window=20, step=0.1):
+#         self.robot = TankRobot()
+#         self.window = window
+#         self.step = step
 
-#    def generate_run(self, controller):
-#        d = {}
-#        current_velocity = 0
-#        requested_velocity = 10 * 0.3048
-#        d['commanded_power'] = []
-#
-#        for step in np.arange(0, self.window, self.step):
-#            d['velocity'].append(current_velocity)
-#            d['commanded_pwm'].append(
-#                controller(current_velocity, requested_velocity))
-#            d['robot_acceleration'].append(None)
+#     def __str__(self):
+#         params = {'window': self.window, 'step': self.step}
+#         return 'TankRobotController: {params}'.format(str(params))
 
-#cim_curve = pd.read_csv(cim_csv)
-#print(cim_curve)
-#cim_curve.plot.line(x=0)
+#     def silly_controller(self, current_velocity, requested_velocity):
+#         return 1
 
-robot = TankRobot(
-    gear_ratio=5.1,
-    mass=134,
-    battery_internal_resistance=0.011,
-    battery_nominal_voltage=13.0,
-    battery_min_allowed_voltage=6.5)
-print(robot)
-#robot.motor_curve.to_csv('test_data.csv')
-robot.motor_curve[[
-    'speed', 'robot_velocity', 'robot_acceleration', 'robot_acceleration_fit',
-    'robot_acceleration_targets'
-]].plot(x='speed')
-robot.motor_curve[[
-    'speed', 'robot_max_pwm_allowed', 'robot_max_allowed_pwm_equation'
-]].plot(x='speed')
-plt.show()
+#     def generate_run(self, controller):
+#         d = {}
+#         current_velocity = 0
+#         requested_velocity = 10 * 0.3048
+#         d['commanded_power'] = []
+
+#         for step in np.arange(0, self.window, self.step):
+#             d['velocity'].append(current_velocity)
+#             d['commanded_pwm'].append(
+#                 controller(current_velocity, requested_velocity))
+#             d['robot_acceleration'].append(None)
+
+# cim_curve = pd.read_csv(cim_csv)
+# print(cim_curve)
+# cim_curve.plot.line(x=0)
+
+# robot = TankRobot(
+#     gear_ratio=5.1,
+#     mass=134,
+#     battery_internal_resistance=0.011,
+#     battery_nominal_voltage=13.0,
+#     battery_min_allowed_voltage=6.5)
+# print(robot)
+# # robot.motor_curve.to_csv('test_data.csv')
+# robot.motor_curve[[
+#     'speed', 'robot_velocity', 'robot_acceleration', 'robot_acceleration_fit',
+#     'robot_acceleration_targets'
+# ]].plot(x='speed')
+# robot.motor_curve[[
+#     'speed', 'robot_max_pwm_allowed', 'robot_max_allowed_pwm_equation'
+# ]].plot(x='speed')
+# plt.show()

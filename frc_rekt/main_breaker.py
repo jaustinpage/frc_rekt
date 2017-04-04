@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-""" MainBreaker
+"""MainBreaker model.
 
 Models a main breaker on an frc robot. Uses data from datasheet
 
@@ -22,11 +22,15 @@ POLY = np.polynomial.polynomial
 
 
 class MainBreaker(object):  # pylint: disable=too-few-public-methods
-    """ Models a Mainbreaker
-
-    """
+    """Model of a Mainbreaker."""
 
     def __init__(self, ambient_temp=25):
+        """MainBreaker.
+
+        :param ambient_temp: The ambient temperature of the breaker
+        :type ambient_temp: int float
+
+        """
         self.logger = logging.getLogger(__name__)
         self.ambient_temp = ambient_temp
         self._temp_derate_min_frames = self._get_temp_derate_frames()
@@ -36,17 +40,6 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def _get_file_name(datatype='temp_derate', boundary='min'):
-        '''
-        gets the file name
-
-        :param boundary: the boundary to get, either min or max
-        :type boundary: str
-        :param datatype: the type of data to get, either temp_derate or
-            trip_time
-        :type datatype: str
-        :return: file path
-        :rtype: str
-        '''
         directory = 'data/data_sheets'
         filename = '120-main-breaker-{0}-{1}.csv'.format(datatype, boundary)
         path = '{0}/{1}'.format(directory, filename)

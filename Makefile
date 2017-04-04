@@ -32,6 +32,11 @@ format:
 lint:
 	pylint ./frc_rekt/
 
+.PHONY: codestyle
+codestyle:
+	pycodestyle ./frc_rekt
+	pydocstyle ./frc_rekt
+
 .PHONY: check_format
 check_format:
 	if [ -z "`yapf --recursive --style pep8 --diff ./frc_rekt/`" ]; then exit 0; else exit 1; fi
@@ -41,10 +46,10 @@ pytest:
 	pytest --color='yes' ./frc_rekt/
 
 .PHONY: prep
-prep: format lint pytest clean
+prep: format lint codestyle pytest clean
 
 .PHONY: test
-test: check_format pytest
+test: check_format lint pytest
 
 .PHONY: update_branch
 update_branch:
