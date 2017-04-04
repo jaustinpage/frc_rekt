@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-import collections
+"""Model of an frc Motor.
+
+Models an frc motor. Uses data from motors.vex.com.
+
+"""
+
 import logging
 import pandas as pd
-import pint
-import pprint
 import numpy as np
-import magic
-import math
-import matplotlib.pyplot as plt
+
+from frc_rekt.helpers import get_file_encoding, plot_func
 
 # Pandas options
 pd.set_option('max_rows', 121)
@@ -16,34 +18,37 @@ pd.set_option('max_columns', 132)
 pd.set_option('expand_frame_repr', False)
 
 # just a convenience, so we dont have to type np.poly.poly
-poly = np.polynomial.polynomial
+POLY = np.polynomial.polynomial
 
 
-class Motor(object):
+class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-public-methods
+    """Models a motor."""
+
+    motor_types = ['cim', 'mini-cim', '775pro', 'bag']
+    _stall_voltages = [2, 4, 6, 8, 10, 12]
+    _motor_curve_voltage = 12.0
+
     def __init__(self, motor_type='cim', speed=0.0, voltage=0.0):
+        """Motor.
+
+        :param motor_type: The type of motor to model
+        :type motor_type: str
+        :param speed: The speed the motor is turning at
+        :type speed: float
+        :param voltage: The voltage being supplied to the motor
+        :type voltage: float
+
+        """
         self.logger = logging.getLogger(__name__)
         self.motor_type = motor_type
         self.speed = speed
         self.voltage = voltage
-        self.motor_curve_voltage = 12.0
-        self.stall_voltages = [2, 4, 6, 8, 10, 12]
         self.curve_frame = self._get_curve_frame()
         self.stall_frames = self._get_stall_frames()
         self._generate_functions()
-        self.logger.debug(
-            '{motor_type} Motor created'.format(motor_type=self.motor_type))
-
-    @staticmethod
-    def _get_file_encoding(file_path):
-        m = magic.Magic(mime_encoding=True)
-        encoding = m.from_file(file_path)
-        return encoding
+        self.logger.debug('%s Motor created', self.motor_type)
 
     def _get_file_name(self, voltage=None):
-        '''
-        returns the motor curve if no voltage is supplied, else
-        returns locked rotor test data for that voltage
-        '''
         data_folder = 'data/vex'
         curve_data_date = {
             'cim': '20151104',
@@ -69,20 +74,19 @@ class Motor(object):
             data_folder=data_folder,
             motor_type=self.motor_type,
             file_name=file_name)
-        encoding = self._get_file_encoding(file_path)
-        logging.debug(
-            'file_path: {0}, encoding: {1}'.format(file_path, encoding))
+        encoding = get_file_encoding(file_path)
+        logging.debug('file_path: %s, encoding: %s', file_path, encoding)
         return file_path, encoding
 
     def _get_curve_frame(self):
         file_path, encoding = self._get_file_name()
-        try:
-            self.logger.debug(
-                'Opening curve: {file_path}'.format(file_path=file_path))
-            curve_frame = pd.read_csv(file_path, encoding=encoding)
-        except KeyError as e:
-            raise e
-        self.logger.debug('Opened Curve: {0}'.format(curve_frame))
+
+        self.logger.debug('Opening curve: %s', file_path)
+        curve_frame = pd.DataFrame(
+            pd.read_csv(file_path, encoding=encoding)
+        )  # The cast to DataFrame is due to bug: https://github.com/PyCQA/pylint/issues/1161
+        self.logger.debug('Opened Curve: %s', curve_frame)
+
         # Rename columns
         curve_frame.rename(
             columns={
@@ -100,18 +104,18 @@ class Motor(object):
             'speed'] / 60.0  # revolutions / second
         curve_frame['efficiency'] = curve_frame[
             'efficiency'] / 100.0  # percentage scaled to 1
-        self.logger.debug('Motor Curve: {0}'.format(curve_frame))
+        self.logger.debug('Motor Curve: %s', curve_frame)
         return curve_frame
 
     def _get_stall_frames(self):
         stall_frames = {}
-        for voltage in self.stall_voltages:
+        for voltage in self._stall_voltages:
             file_path, encoding = self._get_file_name(voltage=voltage)
-            try:
-                stall_frame = pd.read_csv(file_path, encoding=encoding)
-            except KeyError as e:
-                raise e
-            # rename columns 
+
+            stall_frame = pd.DataFrame(
+                pd.read_csv(file_path, encoding=encoding)
+            )  # The cast to DataFrame is due to bug: https://github.com/PyCQA/pylint/issues/1161
+            # rename columns
             stall_frame.rename(
                 columns={
                     'Time': 'time',
@@ -129,44 +133,36 @@ class Motor(object):
                 },
                 inplace=True)
             stall_frames[voltage] = stall_frame
-        self.logger.debug('Stall frames: {0}'.format(stall_frames))
+        self.logger.debug('Stall frames: %s', stall_frames)
         return stall_frames
 
     def _generate_functions(self):
         self.current_func = self._generate_basic_function('current')
         self.torque_func = self._generate_basic_function('torque')
-        self.voltage_scaled_current = self._generate_voltage_scaled_function(
-            'current')
-        self.voltage_scaled_torque = self._generate_voltage_scaled_function(
-            'torque')
-
-    @staticmethod
-    def _plot_fit(dataframe, fit_func, x_label, y_label):
-        dataframe['fit'] = fit_func(dataframe[x_label])
-        plot_df = dataframe.loc[:, [x_label, y_label, 'fit']]
-        plot_df.plot(x=x_label)
+        self.voltage_scaled_current = self._gen_voltage_scaled_func('current')
+        self.voltage_scaled_torque = self._gen_voltage_scaled_func('torque')
 
     def _generate_basic_function(self, y_label, plot=False):
         x = self.curve_frame['speed'].values
         y = self.curve_frame[y_label].values
 
-        coefs = poly.polyfit(x=x, y=y, deg=1)
-        current_func = poly.Polynomial(coefs)
+        coefs = POLY.polyfit(x=x, y=y, deg=1)
+        current_func = POLY.Polynomial(coefs)
         if plot:
-            self._plot_fit(self.curve_frame, current_func, 'speed', y_label)
+            plot_func(self.curve_frame, current_func, 'speed', y_label)
         return current_func
 
-    def _choose_stall_indexes(self, time_index=None):
+    def _choose_stall_indexes(self):
         time = [0]
         current = [0]
         voltage = [0]
         torque = [0]
         test_voltage = [0]
 
-        # Get the first 10 values, picked 10 after looking at 
+        # Get the first 10 values, picked 10 after looking at
         # 775pro 12v locked rotor test data
         # Then, we get the max power in those first 10 data points
-        for test_v in self.stall_voltages:
+        for test_v in self._stall_voltages:
             head = self.stall_frames[test_v].iloc[1:10]
             max_power_index = 0
             max_power = 0
@@ -194,7 +190,7 @@ class Motor(object):
         }
         return pd.DataFrame(stall_index)
 
-    def _generate_voltage_scaled_function(self, y_label, plot=False):
+    def _gen_voltage_scaled_func(self, y_label, plot=False):
         percent_label = '{0}_percent'.format(y_label)
 
         stall_df = self._choose_stall_indexes()
@@ -202,34 +198,13 @@ class Motor(object):
         stall_df[percent_label] = stall_df[y_label] / y_label_12v
         x = stall_df['voltage']
         y = stall_df[percent_label]
-        coefs = poly.polyfit(
+        coefs = POLY.polyfit(
             x=x, y=y,
             deg=[1, 2,
                  3])  # Don't use the 0th term because we want to intercept 0,0
-        vs_func = poly.Polynomial(coefs)
+        vs_func = POLY.Polynomial(coefs)
         if plot:
             predict_df = [{'voltage': 13}, {'voltage': 14}]
-            stall_df = stall_df.append(predict_df, ignore_index=True)
-            self._plot_fit(stall_df, vs_func, 'voltage', percent_label)
+            stall_df = stall_df.append(predict_df, ignore_index=True)  # pylint: disable=redefined-variable-type
+            plot_func(stall_df, vs_func, 'voltage', percent_label)
         return vs_func
-
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    cim_motor = Motor(motor_type='cim')
-    cim_motor._generate_voltage_scaled_function('current', plot=True)
-    cim_motor._generate_voltage_scaled_function('torque', plot=True)
-    minicim_motor = Motor(motor_type='mini-cim')
-    minicim_motor._generate_voltage_scaled_function('current', plot=True)
-    minicim_motor._generate_voltage_scaled_function('torque', plot=True)
-    bag_motor = Motor(motor_type='bag')
-    bag_motor._generate_voltage_scaled_function('current', plot=True)
-    bag_motor._generate_voltage_scaled_function('torque', plot=True)
-    pro_motor = Motor(motor_type='775pro')
-    pro_motor._generate_voltage_scaled_function('current', plot=True)
-    pro_motor._generate_voltage_scaled_function('torque', plot=True)
-    plt.show()
-
-
-if __name__ == '__main__':
-    main()
