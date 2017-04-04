@@ -1,6 +1,7 @@
 matplotlib==2.0.0
 pandas==0.19.2
 Pint==0.7.2
+pylint==1.6.5
 pytest==3.0.7
 python-magic==0.4.13
 requests==2.13.0

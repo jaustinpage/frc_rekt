@@ -10,16 +10,19 @@ create_venv:
 .PHONY: python_deps
 python_deps:
 	echo "Run `source ./env/bin/activate`"
-	echo "Run `pip3 install --upgrade pip`"
-	echo "Run `pip3 install -r requirements.txt`"
+	echo "Run `python3 -m pip install --upgrade pip`"
+	echo "Run `python3 -m pip install -r requirements.txt`"
+
+.PHONY: download_curves
+download_curves:
+	cd data/vex; ./download_curves.py; cd -
+
+.PHONY: init
+init: deps_ubuntu create_venv
 
 .PHONY: clean
 clean:
 	py3clean ./frc-rekt/
-
-.PHONY: pytest
-pytest:
-	pytest --color='yes' ./frc-rekt/
 
 .PHONY: format
 format:
@@ -29,18 +32,15 @@ format:
 check_format:
 	if [ -z "`yapf --recursive --style pep8 --diff ./frc-rekt/`" ]; then exit 0; else exit 1; fi
 
-.PHONY: init
-init: deps_ubuntu create_venv
-
-.PHONY: test
-test: check_format pytest
+.PHONY: pytest
+pytest:
+	pytest --color='yes' ./frc-rekt/
 
 .PHONY: prep
 prep: format pytest clean
 
-.PHONY: download_curves
-download_curves:
-	cd data/vex; ./download_curves.py; cd -
+.PHONY: test
+test: check_format pytest
 
 .PHONY: update_branch
 update_branch:
