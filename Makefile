@@ -40,4 +40,4 @@ prep: format pytest clean
 
 .PHONY: download_curves
 download_curves:
-	cd vex_data/; ./download_curves.py; cd -
+	cd data/vex; ./download_curves.py; cd -

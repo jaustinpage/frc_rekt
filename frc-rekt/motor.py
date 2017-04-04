@@ -43,7 +43,7 @@ class Motor(object):
         returns the motor curve if no voltage is supplied, else
         returns locked rotor test data for that voltage
         '''
-        data_folder = 'vex_data'
+        data_folder = 'data/vex'
         curve_data_date = {
             'cim': '20151104',
             'mini-cim': '20151207',
