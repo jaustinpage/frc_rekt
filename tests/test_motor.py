@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 # pylint: disable=missing-docstring, protected-access, redefined-outer-name, invalid-name
+# pragma: no cover
 import pytest
 
 from frc_rekt.motor import Motor

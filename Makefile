@@ -26,24 +26,24 @@ clean:
 
 .PHONY: format
 format:
-	yapf --in-place --recursive --style pep8 ./frc_rekt/
+	yapf --in-place --recursive --style pep8 ./frc_rekt/ ./tests/
 
 .PHONY: lint
 lint:
-	pylint --rcfile=setup.cfg --reports=n ./frc_rekt/
+	pylint --rcfile=setup.cfg --reports=n ./frc_rekt/ ./tests/
 
 .PHONY: codestyle
 codestyle:
-	pycodestyle ./frc_rekt
+	pycodestyle ./frc_rekt ./tests/
 	pydocstyle ./frc_rekt
 
 .PHONY: check_format
 check_format:
-	if [ -z "`yapf --recursive --style pep8 --diff ./frc_rekt/`" ]; then exit 0; else exit 1; fi
+	if [ -z "`yapf --recursive --style pep8 --diff ./frc_rekt/ ./test/`" ]; then exit 0; else exit 1; fi
 
 .PHONY: pytest
 pytest:
-	pytest --color='yes' ./frc_rekt/
+	pytest --color='yes' ./tests/
 
 .PHONY: prep
 prep: format lint codestyle pytest clean
@@ -57,4 +57,4 @@ update_branch:
 
 .PHONY: add_words_to_pylint
 add_words_to_pylint:
-	pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n ./frc_rekt/
+	pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n ./frc_rekt/ ./tests/

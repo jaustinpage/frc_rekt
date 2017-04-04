@@ -23,7 +23,7 @@ def get_file_encoding(file_path):
     return encoding
 
 
-def plot_func(dataframe, func, x_label, y_label):
+def plot_func(dataframe, func, x_label, y_label):  # pragma: no cover
     """Plot best fit function.
 
     Generates points using the function, and plots those points

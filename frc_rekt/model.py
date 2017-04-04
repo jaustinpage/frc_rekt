@@ -1,22 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 # pylint: skip-file
+"""Model is depricated."""  # pragma: no cover
 
-import collections
-import pandas as pd
-import pint
-import pprint
-import numpy as np
-import math
-import matplotlib.pyplot as plt
+# import collections
+# import pandas as pd
+# import pint
+# import pprint
+# import numpy as np
+# import math
+# import matplotlib.pyplot as plt
 
 # Pandas options
-pd.set_option('max_rows', 121)
-pd.set_option('max_columns', 132)
-pd.set_option('expand_frame_repr', False)
+# pd.set_option('max_rows', 121)
+# pd.set_option('max_columns', 132)
+# pd.set_option('expand_frame_repr', False)
 
 # just a convenience, so we dont have to type np.poly.poly
-poly = np.polynomial.polynomial
+# poly = np.polynomial.polynomial
 
 # class Battery(object):
 #     def __init__(self, nominal_voltage=12.8):
