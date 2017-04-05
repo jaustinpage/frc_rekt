@@ -93,3 +93,6 @@ data/vex
 
 # VIM .swp files
 *.swp
+
+# png's for debugging
+artifacts/

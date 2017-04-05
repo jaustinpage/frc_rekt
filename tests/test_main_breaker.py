@@ -17,4 +17,4 @@ def main_breaker():
 
 
 def test_generate_functions(main_breaker):
-    main_breaker._generate_functions(plot=False)
+    main_breaker._generate_functions(plot=True)

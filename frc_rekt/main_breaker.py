@@ -142,5 +142,5 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
             fitted_func = self._generate_func_fit(fit_func_factory, x, y)
 
         if plot:
-            plot_func(d_frame, fitted_func)
+            plot_func(d_frame, fitted_func, title='main_breaker')
         return fitted_func

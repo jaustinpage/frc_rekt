@@ -5,10 +5,10 @@
 Use these so we don't write duplicate code.
 
 """
+import datetime
+import magic
 
 import matplotlib.pyplot as plt
-
-import magic
 
 
 def get_file_encoding(file_path):
@@ -25,7 +25,8 @@ def get_file_encoding(file_path):
     return encoding
 
 
-def plot_func(dataframe, func, x_label=None, y_label=None):  # pragma: no cover
+def plot_func(dataframe, func, x_label=None, y_label=None,
+              title=None):  # pragma: no cover
     """Plot best fit function.
 
     Generates points using the function, and plots those points
@@ -48,4 +49,9 @@ def plot_func(dataframe, func, x_label=None, y_label=None):  # pragma: no cover
     dataframe['fit'] = func(dataframe[x_label])
     plot_df = dataframe.loc[:, [x_label, y_label, 'fit']]
     plot_df.plot(x=x_label)
-    plt.show()
+    if title:
+        title = '{cls}_{x_label}_vs_{y_label}_fit'.format(
+            cls=title, x_label=x_label, y_label=y_label)
+    if not title:
+        title = datetime.datetime.now().isoformat()
+    plt.savefig('artifacts/{0}.png'.format(title))
