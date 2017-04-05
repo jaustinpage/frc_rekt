@@ -27,7 +27,7 @@ init: deps_ubuntu create_venv
 .PHONY: clean
 clean:
 	py3clean ./frc_rekt/
-	rm -f ./artifacts/*
+	rm -f ./artifacts/*.png
 
 .PHONY: format
 format:
