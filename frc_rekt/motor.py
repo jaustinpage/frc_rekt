@@ -150,7 +150,7 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
         current_func = POLY.Polynomial(coefs)
         if plot:
             plot_func(self.curve_frame, current_func, 'speed', y_label,
-                      'motor')
+                      self.motor_type)
         return current_func
 
     def _choose_stall_indexes(self):
@@ -207,5 +207,6 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
         if plot:
             predict_df = [{'voltage': 13}, {'voltage': 14}]
             stall_df = stall_df.append(predict_df, ignore_index=True)  # pylint: disable=redefined-variable-type
-            plot_func(stall_df, vs_func, 'voltage', percent_label, 'motor')
+            plot_func(stall_df, vs_func, 'voltage', percent_label,
+                      self.motor_type)
         return vs_func
