@@ -12,3 +12,7 @@ def test_init():
 @pytest.fixture
 def battery():
     return Battery()
+
+
+def test_voltage(battery):
+    assert battery.voltage() == 13.2
