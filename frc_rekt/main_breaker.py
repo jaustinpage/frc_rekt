@@ -10,7 +10,9 @@ import logging
 import pandas as pd
 import numpy as np
 
-from frc_rekt.helpers import get_file_encoding
+from scipy import optimize
+
+from frc_rekt.helpers import get_file_encoding, plot_func
 
 # Pandas options
 pd.set_option('max_rows', 121)
@@ -21,7 +23,7 @@ pd.set_option('expand_frame_repr', False)
 POLY = np.polynomial.polynomial
 
 
-class MainBreaker(object):  # pylint: disable=too-few-public-methods
+class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-instance-attributes
     """Model of a Mainbreaker."""
 
     def __init__(self, ambient_temp=25):
@@ -35,6 +37,7 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods
         self.ambient_temp = ambient_temp
         self._temp_derate_min_frames = self._get_temp_derate_frames()
         self._trip_time_frames = self._get_trip_time_frames()
+        self._generate_functions()
         self.logger.debug('Main Breaker created at %s degrees C',
                           self.ambient_temp)
 
@@ -51,11 +54,11 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods
             datatype=datatype, boundary=boundary)
 
         self.logger.debug('Opening dataframe: %s', file_path)
-        d_frame = pd.read_csv(file_path, encoding=encoding)
+        d_frame = pd.DataFrame(
+            pd.read_csv(file_path, encoding=encoding, comment='#')
+        )  # The cast to DataFrame is due to bug: https://github.com/PyCQA/pylint/issues/1161
 
         self.logger.debug('Opened dataframe: %s', d_frame)
-        # Rename columns
-        self.logger.debug('Main Breaker %s-%s', datatype, boundary)
         return d_frame
 
     def _get_temp_derate_frames(self):
@@ -71,3 +74,73 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods
             'max': self._get_frame(datatype='trip_time', boundary='max')
         }
         return frames
+
+    @staticmethod
+    def _fit_func_factory(a=None, b=None, c=None, d=None, e=None):
+        # if we are missing one, make a generic
+        if a and b and c and d and e:
+
+            def func(x):
+                """Specific Function."""
+                return ((a * x + c) / (b * x + d)) + e
+
+        # if we have all, then make a specific one
+        else:
+
+            def func(x, a, b, c, d, e):  # pylint: disable=too-many-arguments
+                """Generic Function."""
+                return ((a * x + c) / (b * x + d)) + e
+
+        return func
+
+    def _generate_functions(self, plot=False):
+        self.trip_time_min = self._generate_func(
+            datatype='trip_time',
+            boundary='min',
+            plot=plot,
+            fit_func_factory=self._fit_func_factory)
+        self.trip_time_max = self._generate_func(
+            datatype='trip_time',
+            boundary='max',
+            plot=plot,
+            fit_func_factory=self._fit_func_factory)
+        self.temp_derate_min = self._generate_func(
+            datatype='temp_derate', boundary='min', plot=plot)
+        self.temp_derate_max = self._generate_func(
+            datatype='temp_derate', boundary='max', plot=plot)
+
+    @staticmethod
+    def _generate_poly_fit(x, y, deg=3):
+        coefs = POLY.polyfit(x, y, deg)
+        func = POLY.Polynomial(coefs)
+        return func
+
+    @staticmethod
+    def _generate_func_fit(func_factory, x, y):
+        popt, pcov = optimize.curve_fit(func_factory(), x, y)
+        logging.debug(popt)
+        logging.debug(pcov)
+        # Static shift to have the end condition be nice
+        unshifted_func = func_factory(*popt)
+        end_diff = abs(y.iloc[-1] - unshifted_func(x.iloc[-1]))
+        logging.debug("end diff: %s", end_diff)
+        popt[-1] = popt[-1] - end_diff
+        return func_factory(*popt)
+
+    def _generate_func(self,
+                       datatype='trip_time',
+                       boundary='min',
+                       plot=False,
+                       fit_func_factory=None):
+        d_frame = self._get_frame(datatype=datatype, boundary=boundary)
+        logging.debug("d_frame to fit: %s", d_frame)
+        x = d_frame[str(d_frame.columns[0])]
+        y = d_frame[str(d_frame.columns[1])]
+        if not fit_func_factory:
+            fitted_func = self._generate_poly_fit(x, y)
+        else:
+            fitted_func = self._generate_func_fit(fit_func_factory, x, y)
+
+        if plot:
+            plot_func(d_frame, fitted_func)
+        return fitted_func

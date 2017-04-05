@@ -6,6 +6,8 @@ Use these so we don't write duplicate code.
 
 """
 
+import matplotlib.pyplot as plt
+
 import magic
 
 
@@ -23,7 +25,7 @@ def get_file_encoding(file_path):
     return encoding
 
 
-def plot_func(dataframe, func, x_label, y_label):  # pragma: no cover
+def plot_func(dataframe, func, x_label=None, y_label=None):  # pragma: no cover
     """Plot best fit function.
 
     Generates points using the function, and plots those points
@@ -39,6 +41,11 @@ def plot_func(dataframe, func, x_label, y_label):  # pragma: no cover
     :type y_label: str
 
     """
+    if not x_label:
+        x_label = dataframe.columns[0]
+    if not y_label:
+        y_label = dataframe.columns[1]
     dataframe['fit'] = func(dataframe[x_label])
     plot_df = dataframe.loc[:, [x_label, y_label, 'fit']]
     plot_df.plot(x=x_label)
+    plt.show()

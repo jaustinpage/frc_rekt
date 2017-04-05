@@ -1,4 +1,4 @@
-"# Time to trip (s), Maximum Current (% rated)",
+# Time to trip (s), Maximum Current (% rated),
 trip_time,max_current
 3.04109589,5.945711183
 3.04109589,5.717698154

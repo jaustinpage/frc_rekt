@@ -1,5 +1,5 @@
-"# Temperature (degrees C), Minimum Derating (%) conservative",
-temperature,min_derating
+# Temperature (degrees C), Minimum Derating (%) conservative,
+temperature,derating
 -43.96823204,1.146898803
 -39.9558011,1.149075082
 -34.56767956,1.146898803
