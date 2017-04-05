@@ -8,6 +8,8 @@ pylint==1.6.5
 pytest==3.0.7
 pytest-catchlog==1.2.2
 pytest-cov==2.4.0
+pytest-logging==2015.11.4
 python-magic==0.4.13
 requests==2.13.0
+scipy==0.19.0
 yapf==0.16.1

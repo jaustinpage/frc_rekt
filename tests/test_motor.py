@@ -25,16 +25,16 @@ def motor(motor_types):
 
 
 def test_generate_basic_function_current(motor):
-    motor._generate_basic_function('current', plot=True)
+    motor._generate_basic_function('current', plot=False)
 
 
 def test_generate_basic_function_torque(motor):
-    motor._generate_basic_function('torque', plot=True)
+    motor._generate_basic_function('torque', plot=False)
 
 
 def test_get_voltage_scaled_current(motor):
-    motor._gen_voltage_scaled_func('current', plot=True)
+    motor._gen_voltage_scaled_func('current', plot=False)
 
 
 def test_get_voltage_scaled_torque(motor):
-    motor._gen_voltage_scaled_func('torque', plot=True)
+    motor._gen_voltage_scaled_func('torque', plot=False)
