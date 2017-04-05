@@ -33,13 +33,13 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
         :type ambient_temp: int float
 
         """
-        self.logger = logging.getLogger(__name__)
+        self._logger = logging.getLogger(__name__)
         self.ambient_temp = ambient_temp
         self._temp_derate_min_frames = self._get_temp_derate_frames()
         self._trip_time_frames = self._get_trip_time_frames()
         self._generate_functions()
-        self.logger.debug('Main Breaker created at %s degrees C',
-                          self.ambient_temp)
+        self._logger.debug('Main Breaker created at %s degrees C',
+                           self.ambient_temp)
 
     @staticmethod
     def _get_file_name(datatype='temp_derate', boundary='min'):
@@ -53,12 +53,12 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
         file_path, encoding = self._get_file_name(
             datatype=datatype, boundary=boundary)
 
-        self.logger.debug('Opening dataframe: %s', file_path)
+        self._logger.debug('Opening dataframe: %s', file_path)
         d_frame = pd.DataFrame(
             pd.read_csv(file_path, encoding=encoding, comment='#')
         )  # The cast to DataFrame is due to bug: https://github.com/PyCQA/pylint/issues/1161
 
-        self.logger.debug('Opened dataframe: %s', d_frame)
+        self._logger.debug('Opened dataframe: %s', d_frame)
         return d_frame
 
     def _get_temp_derate_frames(self):

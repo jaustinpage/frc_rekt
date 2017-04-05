@@ -39,14 +39,14 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
         :type voltage: float
 
         """
-        self.logger = logging.getLogger(__name__)
+        self._logger = logging.getLogger(__name__)
         self.motor_type = motor_type
         self.speed = speed
         self.voltage = voltage
         self.curve_frame = self._get_curve_frame()
         self.stall_frames = self._get_stall_frames()
         self._generate_functions()
-        self.logger.debug('%s Motor created', self.motor_type)
+        self._logger.debug('%s Motor created', self.motor_type)
 
     def _get_file_name(self, voltage=None):
         data_folder = 'data/vex'
@@ -81,11 +81,11 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
     def _get_curve_frame(self):
         file_path, encoding = self._get_file_name()
 
-        self.logger.debug('Opening curve: %s', file_path)
+        self._logger.debug('Opening curve: %s', file_path)
         curve_frame = pd.DataFrame(
             pd.read_csv(file_path, encoding=encoding)
         )  # The cast to DataFrame is due to bug: https://github.com/PyCQA/pylint/issues/1161
-        self.logger.debug('Opened Curve: %s', curve_frame)
+        self._logger.debug('Opened Curve: %s', curve_frame)
 
         # Rename columns
         curve_frame.rename(
@@ -104,7 +104,7 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
             'speed'] / 60.0  # revolutions / second
         curve_frame['efficiency'] = curve_frame[
             'efficiency'] / 100.0  # percentage scaled to 1
-        self.logger.debug('Motor Curve: %s', curve_frame)
+        self._logger.debug('Motor Curve: %s', curve_frame)
         return curve_frame
 
     def _get_stall_frames(self):
@@ -133,7 +133,7 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
                 },
                 inplace=True)
             stall_frames[voltage] = stall_frame
-        self.logger.debug('Stall frames: %s', stall_frames)
+        self._logger.debug('Stall frames: %s', stall_frames)
         return stall_frames
 
     def _generate_functions(self):
