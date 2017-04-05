@@ -48,14 +48,19 @@ the venv with `source env/bin/activate`. Then `./*.py` to run a module.
 Developing
 ----------
 
-Write good code.
-Use `yapf --in-place --style pep8 filename.py` to autoformat code.
-Write tests for your code, using pytest.
+Write good code. Before uploading, run `make prep` if you are on linux to 
+prepare and run tests. Note: This will auto-format your files, so you probably
+want to run this before you commit.
+
+If pylint complains about misspelled words that are not misspelled, run
+`make add_words_to_pylint` and the words that pylint is complaining about will
+be added to the dictionary. Make sure you add the modified
+.pylint_spelling_dict file to your commit, or you will not pass circleci.
 
 Testing
 -------
 
-Use pytest to run tests. `pytest --color='yes' ./`
+run `make prep` to run tests locally.
 
 Other
 -----
