@@ -11,21 +11,6 @@
 # import math
 # import matplotlib.pyplot as plt
 
-# Pandas options
-# pd.set_option('max_rows', 121)
-# pd.set_option('max_columns', 132)
-# pd.set_option('expand_frame_repr', False)
-
-# just a convenience, so we dont have to type np.poly.poly
-# poly = np.polynomial.polynomial
-
-# class Battery(object):
-#     def __init__(self, nominal_voltage=12.8):
-#         pass
-
-#     def generate_equations(self):
-#         pass
-
 # # Robot constants
 # # TODO: Refactor with new motor class
 # class TankRobot(object):
