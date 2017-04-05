@@ -3,6 +3,8 @@ machine:
     version: 3.6.0 
 
 dependencies:
+  pre:
+    - make deps_circle
   post:
     - make download_curves
   cache_directories:
