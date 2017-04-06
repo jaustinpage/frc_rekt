@@ -77,19 +77,29 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
 
     @staticmethod
     def _fit_func_factory(a=None, b=None, c=None, d=None, e=None):
-        # if we are missing one, make a generic
+        # Specific with correction
         if a and b and c and d and e:
 
             def func(x):
                 """Specific Function."""
-                return ((a * x + c) / (b * x + d)) + e
+                return a * ((b * (x + c))**d) + e
 
-        # if we have all, then make a specific one
+        # Specific without correction
+        elif a and b and c and d:
+
+            def func(x):
+                """Specific Function."""
+                return a * ((b * (x + c))**d)
+
+        # Generic, which we have scipy.optimize.curve_fit run on
+        # scipy.optimize.curve_fit will then give us a, b, c, d,
+        # however, scipy.optimize has touble with e. We correct e "by hand"
+        # at the end.
         else:
 
-            def func(x, a, b, c, d, e):  # pylint: disable=too-many-arguments
+            def func(x, a, b, c, d):  # pylint: disable=too-many-arguments
                 """Generic Function."""
-                return ((a * x + c) / (b * x + d)) + e
+                return a * ((b * (x + c))**d)
 
         return func
 
@@ -122,10 +132,10 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
         logging.debug(pcov)
         # Static shift to have the end condition be nice
         unshifted_func = func_factory(*popt)
-        end_diff = abs(y.iloc[-1] - unshifted_func(x.iloc[-1]))
+        end_diff = y.iloc[-1] - unshifted_func(x.iloc[-1])
         logging.debug("end diff: %s", end_diff)
-        popt[-1] = popt[-1] - end_diff
-        return func_factory(*popt)
+        popt_shifted = np.append(popt, end_diff)
+        return func_factory(*popt_shifted)
 
     def _generate_func(self,
                        datatype='trip_time',
