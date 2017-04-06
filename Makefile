@@ -27,6 +27,7 @@ init: deps_ubuntu create_venv
 .PHONY: clean
 clean:
 	py3clean ./frc_rekt/
+	rm -f ./artifacts/*.png
 
 .PHONY: format
 format:
@@ -50,7 +51,7 @@ pytest:
 	pytest --color='yes' ./tests/
 
 .PHONY: prep
-prep: format lint codestyle pytest clean
+prep: format lint codestyle clean pytest 
 
 .PHONY: test
 test: check_format lint codestyle pytest

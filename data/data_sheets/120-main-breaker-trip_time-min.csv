@@ -1,5 +1,5 @@
 # Time to trip (s), Minimum Current (% rated),
-trip_time,current
+trip_time,min_current
 0.8493150685,5.923995657
 0.8219178082,5.86970684
 0.8493150685,5.484256243

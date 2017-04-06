@@ -1,5 +1,5 @@
 # Temperature (degrees C), Maximum Derating (%) optimistic,
-temperature,derating
+temperature,max_derating
 -43.96823204,1.471164309
 -32.73342541,1.455930359
 -22.53038674,1.438520131

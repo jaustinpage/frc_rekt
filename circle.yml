@@ -1,6 +1,11 @@
+# vim: ts=2:sw=2:softtabstop=2
 machine:
   python:
     version: 3.6.0 
+
+general:
+  artifacts:
+    - artifacts/
 
 dependencies:
   pre:
