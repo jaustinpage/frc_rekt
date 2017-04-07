@@ -62,48 +62,6 @@
 #         return 'robot:\n' + str(robot_parameters) + '\nmotor_curve:\n' + str(
 #             self.motor_curve)
 
-#     def get_motor_curve_data(self, motor_type='cim'):
-#         _motor_types = {
-#             'cim': 'motor_curves/cim-motor-curve-data-20151104.csv',
-#             'mini_cim': 'mini-cim-motor-curve-data-20151207.csv',
-#             '775pro': '775pro-motor-curve-data-20151208.csv',
-#             'bag': 'bag-motor-curve-data-20151207.csv'
-#         }
-
-#         try:
-#             curve_table = pd.read_csv(_motor_types[motor_type])
-#         except KeyError as e:
-#             raise e
-#         return curve_table
-
-#     def generate_motor_curve(self):
-#         motor_curve = self.get_motor_curve_data(motor_type=self.motor_type)
-
-#         ct = motor_curve
-
-#         motor_curve['speed'] = motor_curve['speed'] / 60.0
-
-#         motor_curve['total_current'] = motor_curve['current'] * self.motors
-#         motor_curve['battery_voltage'] = self.battery_voltage_under_load(
-#             motor_curve['total_current'])
-
-#         motor_curve['robot_max_pwm_allowed'] = self.max_pwm_allowed(
-#             motor_curve['total_current'])
-
-#         motor_curve['robot_velocity'] = self.robot_velocity(
-#             motor_curve['speed'])
-
-#         motor_curve['robot_acceleration'] = self.robot_acceleration(
-#             motor_curve['battery_voltage'], motor_curve['torque'],
-#             motor_curve['robot_max_pwm_allowed'])
-
-#         return motor_curve
-
-#     def battery_voltage_under_load(self, current):
-#         # V = I*R
-#         return self.battery_nominal_voltage - (
-#             current * self.battery_internal_resistance)
-
 #     def max_pwm_allowed(self, current):
 #         max_current = (
 #             self.battery_nominal_voltage - self.battery_min_allowed_voltage
