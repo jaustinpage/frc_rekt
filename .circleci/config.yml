@@ -9,22 +9,22 @@ jobs:
       - checkout
 
       - restore-cache:
-          key: requirements.txt-{{ checksum "requirements.txt" }}
+          key: v1-requirements.txt-{{ checksum "requirements.txt" }}
 
       - restore-cache:
-          key: download_curves.py-{{ checksum "data/vex/download_curves.py" }}
+          key: v1-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
 
       - run:
           name: Installing python dependencies
           command: scripts/dependencies
 
       - save-cache:
-          key: requirements.txt-{{ checksum "requirements.txt" }}
+          key: v1-requirements.txt-{{ checksum "requirements.txt" }}
           paths:
             - ./env
 
       - save-cache:
-          key: download_curves.py-{{ checksum "data/vex/download_curves.py" }}
+          key: v1-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
           paths:
             - ./data/vex
 
