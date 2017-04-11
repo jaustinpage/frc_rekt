@@ -1,60 +1,14 @@
-.PHONY: deps_ubuntu
-deps_ubuntu:
-	sudo apt-get install python3 python3-pip python3-venv python3-pandas libenchant1c2a
-
-.PHONY: deps_circle
-deps_circle:
-	sudo apt-get install libenchant1c2a
-
-.PHONY: create_venv
-create_venv:
-	python3 -m venv --clear ./env
-	echo "Run \`source ./env/bin/activate\` each time you begin work"
-    
-.PHONY: python_deps
-python_deps:
-	echo "Run \`source ./env/bin/activate\`"
-	echo "Run \`python3 -m pip install --upgrade pip\`"
-	echo "Run \`python3 -m pip install -r requirements.txt\`"
-
-.PHONY: download_curves
-download_curves:
-	cd data/vex; ./download_curves.py; cd -
-
-.PHONY: init
-init: deps_ubuntu create_venv
-
-.PHONY: clean
-clean:
-	py3clean ./frc_rekt/
-	rm -f ./artifacts/*.png
-
-.PHONY: format
-format:
-	yapf --in-place --recursive --style pep8 ./frc_rekt/ ./tests/
-
-.PHONY: lint
-lint:
-	pylint --rcfile=setup.cfg --reports=n ./frc_rekt/ ./tests/
-
-.PHONY: codestyle
-codestyle:
-	pycodestyle ./frc_rekt ./tests/
-	pydocstyle ./frc_rekt
-
-.PHONY: check_format
-check_format:
-	if [ -z "`yapf --recursive --style pep8 --diff ./frc_rekt/ ./test/`" ]; then exit 0; else exit 1; fi
-
-.PHONY: pytest
-pytest:
-	pytest --color='yes' ./tests/
+.PHONY: dependencies
+dependencies:
+	scripts/dependencies
 
 .PHONY: prep
-prep: format lint codestyle clean pytest 
+prep: 
+	scripts/prep
 
 .PHONY: test
-test: check_format lint codestyle pytest
+test:
+	scripts/test
 
 .PHONY: update_branch
 update_branch:
@@ -62,4 +16,4 @@ update_branch:
 
 .PHONY: add_words_to_pylint
 add_words_to_pylint:
-	pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n ./frc_rekt/ ./tests/
+	env/bin/pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n ./frc_rekt/ ./tests/

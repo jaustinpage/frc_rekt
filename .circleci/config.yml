@@ -1,0 +1,37 @@
+# vim: ts=2:sw=2:softtabstop=2
+
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: ~/frc_rekt
+    steps: 
+      - checkout
+
+      - restore-cache:
+          key: requirements.txt-{{ checksum "requirements.txt" }}
+
+      - restore-cache:
+          key: download_curves.py-{{ checksum "data/vex/download_curves.py" }}
+
+      - run:
+          name: Installing python dependencies
+          command: scripts/dependencies
+
+      - save-cache:
+          key: requirements.txt-{{ checksum "requirements.txt" }}
+          paths:
+            - ./env
+
+      - save-cache:
+          key: download_curves.py-{{ checksum "data/vex/download_curves.py" }}
+          paths:
+            - ./data/vex
+
+      - run:
+          name: Running Tests
+          command: scripts/test
+
+      - store_artifacts:
+          path: artifacts/
+          destination: test
