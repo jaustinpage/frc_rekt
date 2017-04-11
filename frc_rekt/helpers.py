@@ -8,7 +8,9 @@ Use these so we don't write duplicate code.
 import datetime
 import magic
 
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('AGG')
+import matplotlib.pyplot as plt  # noqa pylint: disable=wrong-import-position
 
 
 def get_file_encoding(file_path):

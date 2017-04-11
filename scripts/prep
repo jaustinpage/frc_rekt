@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# do formatting
+env/bin/yapf --in-place --recursive --style pep8 ./frc_rekt/ ./tests/
+
+# run tests
+./scripts/test

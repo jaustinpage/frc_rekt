@@ -58,14 +58,16 @@ def download_file(motor, url):
 
 
 def download_files():
+    directory = 'data/vex/'
     for motor in files.keys():
+        mpath = directory + motor
         try:
-            logging.info('Creating direcotry %s', str(motor))
-            os.makedirs(motor)
+            logging.info('Creating direcotry %s', str(mpath))
+            os.makedirs(mpath)
         except FileExistsError:
-            logging.info('Directory %s already exists', str(motor))
+            logging.info('Directory %s already exists', str(mpath))
         for url in files[motor]:
-            fpath = download_file(motor, url)
+            fpath = download_file(mpath, url)
             unzip_file(fpath)
 
 
