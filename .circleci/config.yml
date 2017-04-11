@@ -18,6 +18,10 @@ jobs:
           name: Installing python dependencies
           command: scripts/dependencies
 
+      - run:
+          name: Running Tests
+          command: scripts/test
+
       - save-cache:
           key: v1-requirements.txt-{{ checksum "requirements.txt" }}
           paths:
@@ -27,10 +31,6 @@ jobs:
           key: v1-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
           paths:
             - ./data/vex
-
-      - run:
-          name: Running Tests
-          command: scripts/test
 
       - store_artifacts:
           path: artifacts/
