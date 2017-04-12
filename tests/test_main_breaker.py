@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-# pylint: disable=missing-docstring, protected-access, redefined-outer-name
 
 import pytest
 
@@ -18,3 +17,11 @@ def main_breaker():
 
 def test_generate_functions(main_breaker):
     main_breaker._generate_functions(plot=True)
+
+
+def test_public_functions(main_breaker):
+    assert main_breaker.trip_time(240) == (13.286548983982193,
+                                           34.401343327033658)
+
+    assert main_breaker.temperature_derate(78) == (0.97153542326750275,
+                                                   1.2706642035856861)
