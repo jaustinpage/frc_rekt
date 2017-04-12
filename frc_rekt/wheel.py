@@ -19,8 +19,8 @@ pd.set_option('expand_frame_repr', False)
 POLY = np.polynomial.polynomial
 
 
-class Wheel(object):  # pylint: disable=too-few-public-methods
-    """Model of a Mainbreaker."""
+class Wheel(object):
+    """Model of a Wheel."""
 
     def __init__(self, diameter=4.0, cof=1.3, torque=0.0):
         """Wheel.
