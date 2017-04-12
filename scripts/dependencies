@@ -4,7 +4,7 @@
 if [[ "$CIRCLECI" = "true" ]]; then
   pyenv local 3.5.2
 else
-  sudo apt-get install python3 python3-venv python3-pip python3-pandas
+  sudo apt-get install python3 python3-venv python3-pip
 fi
 
 sudo apt-get install libenchant1c2a
