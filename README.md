@@ -1,9 +1,7 @@
 frc_rekt - FRC Robot Electrical and Kinematic Tool
 ==================================================
 
-[![CircleCI](https://circleci.com/gh/jaustinpage/frc_rekt.svg?style=shield&circle-token=ce65d30cde7772fda8b5a2f93fa28ff9efa42fb4)](https://circleci.com/gh/jaustinpage/frc_rekt)
-
-[![Documentation Status](https://readthedocs.org/projects/frc-rekt/badge/?version=latest)](http://frc-rekt.readthedocs.io/en/latest/?badge=latest)
+[![CircleCI](https://circleci.com/gh/jaustinpage/frc_rekt.svg?style=shield&circle-token=ce65d30cde7772fda8b5a2f93fa28ff9efa42fb4)](https://circleci.com/gh/jaustinpage/frc_rekt) [![Documentation Status](https://readthedocs.org/projects/frc-rekt/badge/?version=latest)](http://frc-rekt.readthedocs.io/en/latest/?badge=latest)
 
 This is a tool for modeling the electrical and kinematic properties of an 
 FRC robot. It aims to make predictions about how a robot's electrical system
