@@ -22,7 +22,7 @@ pd.set_option('expand_frame_repr', False)
 POLY = np.polynomial.polynomial
 
 
-class Drivetrain(object):  # pylint: disable=too-few-public-methods
+class Drivetrain(object):
     """Model of a Drivetrain."""
 
     def __init__(self, wheel=None, motor=None, length=34, width=28):

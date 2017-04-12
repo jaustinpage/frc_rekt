@@ -23,7 +23,7 @@ pd.set_option('expand_frame_repr', False)
 POLY = np.polynomial.polynomial
 
 
-class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-instance-attributes
+class MainBreaker(object):  # pylint: disable=too-many-instance-attributes
     """Model of a Mainbreaker."""
 
     def __init__(self, ambient_temp=25):
@@ -34,6 +34,7 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
 
         """
         self._logger = logging.getLogger(__name__)
+        self.rated_current = 120.0
         self.ambient_temp = ambient_temp
         self._temp_derate_min_frames = self._get_temp_derate_frames()
         self._trip_time_frames = self._get_trip_time_frames()
@@ -97,7 +98,7 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
         # at the end.
         else:
 
-            def func(x, a, b, c, d):  # pylint: disable=too-many-arguments
+            def func(x, a, b, c, d):
                 """Generic Function."""
                 return a * ((b * (x + c))**d)
 
@@ -154,3 +155,14 @@ class MainBreaker(object):  # pylint: disable=too-few-public-methods, too-many-i
         if plot:
             plot_func(d_frame, fitted_func, title='main_breaker')
         return fitted_func
+
+    def trip_time(self, current):
+        """Trip time min, max in seconds for given amount of current."""
+        current_percent = current / self.rated_current
+        return self.trip_time_min(current_percent), self.trip_time_max(
+            current_percent)
+
+    def temperature_derate(self, temp):
+        """Trip time derating, based on temperature."""
+        temp_c = (temp - 32) / 1.8
+        return self.temp_derate_min(temp_c), self.temp_derate_max(temp_c)
