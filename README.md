@@ -1,7 +1,7 @@
 frc_rekt - FRC Robot Electrical and Kinematic Tool
 ==================================================
 
-![CircleCI Build Status](https://circleci.com/gh/jaustinpage/frc_rekt.svg?style=shield&circle-token=ce65d30cde7772fda8b5a2f93fa28ff9efa42fb4)
+[![CircleCI](https://circleci.com/gh/jaustinpage/frc_rekt.svg?style=shield&circle-token=ce65d30cde7772fda8b5a2f93fa28ff9efa42fb4)](https://circleci.com/gh/jaustinpage/frc_rekt)
 
 This is a tool for modeling the electrical and kinematic properties of an 
 FRC robot. It aims to make predictions about how a robot's electrical system
@@ -27,7 +27,7 @@ Setup
 -----
 
 1. Install the dependencies listed above, e.g. `
-    sudo apt-get install python3 python3-pip python3-venv python3-pandas`
+    make dependencies`
 1. Create a virtual environment `
     python3 -m venv ./env  # Keeps your packages separate`
 1. Activate the virtual environment `

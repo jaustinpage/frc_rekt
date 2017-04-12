@@ -16,4 +16,5 @@ update_branch:
 
 .PHONY: add_words_to_pylint
 add_words_to_pylint:
-	env/bin/pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n ./frc_rekt/ ./tests/
+	env/bin/pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n ./frc_rekt/
+	env/bin/pylint --rcfile=setup.cfg --spelling-store-unknown-words=yes --reports=n --disable=missing-docstring,protected-access,redefined-outer-name,invalid-name ./tests/

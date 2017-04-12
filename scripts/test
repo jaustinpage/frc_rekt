@@ -3,9 +3,17 @@
 set -e
 
 # Check format
-if [ -z "`env/bin/yapf --recursive --style pep8 --diff ./frc_rekt/ ./test/`" ]; then echo "YAPF formatted."; else exit 1; fi
+if [ -z "`env/bin/yapf --recursive --style pep8 --diff ./frc_rekt/ ./test/`" ]; then
+    echo "YAPF formatted correctly."
+else 
+    echo "YAPF formatting was not applied to commit. Run `make prep` to fix"
+    exit 1
+fi
 
-env/bin/pylint --rcfile=setup.cfg --reports=n ./frc_rekt/ ./tests/
+env/bin/pylint --rcfile=setup.cfg --reports=n ./frc_rekt/
+env/bin/pylint --rcfile=setup.cfg --reports=n \
+    --disable=missing-docstring,protected-access,redefined-outer-name,invalid-name \
+    ./tests/
 
 env/bin/pycodestyle ./frc_rekt ./tests/
 
