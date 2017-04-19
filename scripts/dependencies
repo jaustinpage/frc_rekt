@@ -1,13 +1,14 @@
 #!/bin/bash
 
+set -e
+
 # ubuntu dependencies
 if [[ "$CIRCLECI" = "true" ]]; then
-  pyenv local 3.5.2
+  apt-get update
+  apt-get install -y python3 python3-venv python3-pip libenchant1c2a
 else
-  sudo apt-get install python3 python3-venv python3-pip
+  sudo apt-get install python3 python3-venv python3-pip libenchant1c2a
 fi
-
-sudo apt-get install libenchant1c2a
 
 python3 -m venv ./env
 
