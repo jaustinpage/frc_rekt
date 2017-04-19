@@ -1,21 +1,26 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
-# ubuntu dependencies
-if [[ "$CIRCLECI" = "true" ]]; then
+if [ $CIRCLECI == 'true' ]; then
+  echo "Packages needed are already installed, skipping."
+elif systemd-detect-virt --container; then
+  echo "Installing packages on docker container."
   apt-get update
-  apt-get install -y python3 python3-venv python3-pip libenchant1c2a
+  apt-get upgrade -y
+  apt-get install -y \
+      ca-certificates \
+      git \
+      libenchant1c2a \
+      python3 \
+      python3-pip \
+      python3-venv
+  rm -rf /var/lib/apt/lists/*
 else
-  sudo apt-get install python3 python3-venv python3-pip libenchant1c2a
+  echo "Installing packages on your local ubuntu machine."
+  sudo apt-get install \
+      libenchant1c2a \
+      python3 \
+      python3-pip \
+      python3-venv
 fi
-
-python3 -m venv ./env
-
-env/bin/python3 -m pip install --upgrade pip
-env/bin/python3 -m pip install -r requirements.txt
-
-echo "Remember to run source ./env/bin/activate now, and every time you start working"
-
-# download curves
-env/bin/python3 data/vex/download_curves.py

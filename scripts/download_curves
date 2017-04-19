@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+# download curves
+env/bin/python3 data/vex/download_curves.py

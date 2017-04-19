@@ -4,34 +4,26 @@ version: 2
 jobs:
   build:
     docker:
-      - image: ubuntu:latest
+      - image: jaustinpage/frc_rekt
 
-    working_directory: ~/frc_rekt
+    working_directory: /app/frc_rekt
     steps:
-      - run:
-          command: |
-            apt-get update
-            apt-get install -y ca-certificates
-
       - checkout
-
-      - restore-cache:
-          key: v2-requirements.txt-{{ checksum "requirements.txt" }}
 
       - restore-cache:
           key: v2-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
 
       - run:
-          command: |
-            scripts/dependencies
+          command: scripts/dependencies
+
+      - run:
+          command: scripts/py-dependencies
+
+      - run:
+          command: scripts/download_curves
 
       - run:
           command: scripts/test
-
-      - save-cache:
-          key: v2-requirements.txt-{{ checksum "requirements.txt" }}
-          paths:
-            - ./env
 
       - save-cache:
           key: v2-download_curves.py-{{ checksum "data/vex/download_curves.py" }}

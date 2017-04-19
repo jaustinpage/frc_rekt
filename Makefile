@@ -1,6 +1,8 @@
 .PHONY: dependencies
 dependencies:
 	scripts/dependencies
+	scripts/py-dependencies
+	scripts/download_curves
 
 .PHONY: prep
 prep: 
