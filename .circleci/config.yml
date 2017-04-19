@@ -8,6 +8,11 @@ jobs:
 
     working_directory: ~/frc_rekt
     steps:
+      - run:
+          command: |
+            apt-get update
+            apt-get install -y ca-certificates
+
       - checkout
 
       - restore-cache:
@@ -18,8 +23,6 @@ jobs:
 
       - run:
           command: |
-            apt-get update
-            apt-get install -y ca-certificates
             scripts/dependencies
 
       - run:

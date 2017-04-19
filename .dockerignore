@@ -1,0 +1,4 @@
+# Ignore everything by default
+*
+# Add in requirements (! = not)
+!requirements.txt
