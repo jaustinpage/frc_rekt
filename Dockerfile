@@ -15,12 +15,11 @@ RUN \
   apt-get install -y python3-venv python3-pip libenchant1c2a && \
   rm -rf /var/lib/apt/lists/*
 
-ADD requirements.txt /root/requirements.txt
+ADD requirements.txt /tmp/requirements.txt
 
 RUN \
-  python3 -m venv ./env && \
-  env/bin/python3 -m pip install --upgrade pip && \
-  env/bin/python3 -m pip install -r /root/requirements.txt
+  python3 -m pip install --upgrade pip && \
+  python3 -m pip install -r /tmp/requirements.txt
 
 ENV HOME /root
 
