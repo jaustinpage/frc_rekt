@@ -3,32 +3,35 @@
 version: 2
 jobs:
   build:
-    machine: true
+    docker:
+      - image: ubuntu:latest
+
     working_directory: ~/frc_rekt
-    steps: 
+    steps:
       - checkout
 
       - restore-cache:
-          key: v1-requirements.txt-{{ checksum "requirements.txt" }}
+          key: v2-requirements.txt-{{ checksum "requirements.txt" }}
 
       - restore-cache:
-          key: v1-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
+          key: v2-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
 
       - run:
-          name: Installing python dependencies
-          command: scripts/dependencies
+          command: |
+            apt-get update
+            apt-get install -y ca-certificates
+            scripts/dependencies
 
       - run:
-          name: Running Tests
           command: scripts/test
 
       - save-cache:
-          key: v1-requirements.txt-{{ checksum "requirements.txt" }}
+          key: v2-requirements.txt-{{ checksum "requirements.txt" }}
           paths:
             - ./env
 
       - save-cache:
-          key: v1-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
+          key: v2-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
           paths:
             - ./data/vex
 

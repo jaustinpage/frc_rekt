@@ -206,7 +206,7 @@ class Motor(object):  # pylint: disable=too-many-instance-attributes,too-few-pub
         vs_func = POLY.Polynomial(coefs)
         if plot:
             predict_df = [{'voltage': 13}, {'voltage': 14}]
-            stall_df = stall_df.append(predict_df, ignore_index=True)  # pylint: disable=redefined-variable-type
+            stall_df = stall_df.append(predict_df, ignore_index=True)
             plot_func(stall_df, vs_func, 'voltage', percent_label,
                       self.motor_type)
         return vs_func

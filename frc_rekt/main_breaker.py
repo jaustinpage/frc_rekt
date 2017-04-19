@@ -99,7 +99,7 @@ class MainBreaker(object):  # pylint: disable=too-many-instance-attributes
         else:
 
             def func(x, a, b, c, d):
-                """Generic Function."""
+                """Unparameterized Function."""
                 return a * ((b * (x + c))**d)
 
         return func
