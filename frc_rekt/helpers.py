@@ -12,6 +12,9 @@ import matplotlib
 matplotlib.use('AGG')
 import matplotlib.pyplot as plt  # noqa pylint: disable=wrong-import-position
 
+import seaborn as sns  # noqa pylint: disable=wrong-import-position
+sns.set(color_codes=True)
+
 
 def get_file_encoding(file_path):
     """Return encoding for file path.
