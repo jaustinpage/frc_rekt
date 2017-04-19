@@ -2,3 +2,7 @@
 *
 # Add in requirements (! = not)
 !requirements.txt
+# Add back scripts
+!scripts/*
+# Add back data
+!data/*
