@@ -6,39 +6,70 @@
 # https://github.com/jaustinpage/frc_rekt
 #
 
-FROM ubuntu
+FROM alpine:latest
 
-# Get our dependencies file
-COPY scripts/dependencies /tmp/dependencies
+# credit to https://github.com/drillan/docker-alpine-scipy/blob/master/Dockerfile
+# credit to https://github.com/amancevice/pandas/blob/master/0.19/python3/Dockerfile
+# credit to https://github.com/rui/docker-matplotlib/blob/master/Dockerfile
 
-# Run dependencies
-RUN /tmp/dependencies
-
-WORKDIR /root/
-
-# Used to expire the layer if master has changed
-ADD https://api.github.com/repos/jaustinpage/frc_rekt/compare/master...HEAD /dev/null
-# We are cloning the git repo to speed up build time. NOTE: Must update from branch if testing code
-RUN git clone https://github.com/jaustinpage/frc_rekt /app/frc_rekt
-
-# Switch working directory to git repo
-WORKDIR /app/frc_rekt
-
-# Note: Anything below this should be populating cached data, and should be "redone"
-# at test time. The only reason for doing this ahead of time is to speed up building and testing
-# A good rule: if it aint in .gitignore, you dont want it in the docker container
-# Note 2: Don't rely on the github repo when running scripts, because when building in a branch,
-# master file paths are not guarenteed. Instead, copy what you need.
-
-# Download the python dependencies and populate our ./env virtualenv
-COPY scripts/py-dependencies /tmp/py-dependencies
-RUN /tmp/py-dependencies
-
-# Copy the curves, to prevent excessive downloads from motors.vex.com
-COPY data/vex data/vex/
-
-# Download the curves, this should no-op, but just in case
-COPY scripts/download_curves /tmp/download_curves
-RUN /tmp/download_curves
-
-CMD ["bash"]
+RUN apk update \
+&& apk add \
+    aspell \
+    aspell-en \
+    ca-certificates \
+    enchant \
+    freetype \
+    libmagic \
+    libpng \
+    libstdc++ \
+    libgfortran \
+    python3 \
+&& apk add --no-cache --virtual=build_dependencies \
+    build-base \
+    freetype-dev \
+    gcc \
+    gfortran \
+    g++ \
+    libpng-dev \
+    make \
+    python3-dev \
+&& ln -s /usr/include/locale.h /usr/include/xlocale.h \
+&& mkdir -p /tmp/build \
+&& cd /tmp/build/ \
+&& wget http://www.netlib.org/blas/blas-3.6.0.tgz \
+&& wget http://www.netlib.org/lapack/lapack-3.6.1.tgz \
+&& tar xzf blas-3.6.0.tgz \
+&& tar xzf lapack-3.6.1.tgz \
+&& cd /tmp/build/BLAS-3.6.0/ \
+&& gfortran -O3 -std=legacy -m64 -fno-second-underscore -fPIC -c *.f \
+&& ar r libfblas.a *.o \
+&& ranlib libfblas.a \
+&& mv libfblas.a /tmp/build/. \
+&& cd /tmp/build/lapack-3.6.1/ \
+&& sed -e "s/frecursive/fPIC/g" -e "s/ \.\.\// /g" -e "s/^CBLASLIB/\#CBLASLIB/g" make.inc.example > make.inc \
+&& make lapacklib \
+&& make clean \
+&& mv liblapack.a /tmp/build/. \
+&& cd / \
+&& export BLAS=/tmp/build/libfblas.a \
+&& export LAPACK=/tmp/build/liblapack.a \
+&& python3 -m pip --no-cache-dir install pip -U \
+&& python3 -m pip --no-cache-dir install \
+    cython \
+    matplotlib \
+    numpy \
+    pandas \
+    pycodestyle \
+    pydocstyle \
+    pyenchant \
+    pylint \
+    pytest \
+    pytest-cov \
+    python-magic \
+    requests \
+    scipy \
+    seaborn \
+    sphinx \
+    yapf \
+&& apk del --purge -r build_dependencies \
+&& rm -rf /tmp/build

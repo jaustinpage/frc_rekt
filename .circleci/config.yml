@@ -6,7 +6,7 @@ jobs:
     docker:
       - image: jaustinpage/frc_rekt
 
-    working_directory: /app/frc_rekt
+    working_directory: /app/
     steps:
       - checkout
 
@@ -14,16 +14,10 @@ jobs:
           key: v2-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
 
       - run:
-          command: scripts/dependencies
-
-      - run:
-          command: scripts/py-dependencies
-
-      - run:
-          command: scripts/download_curves
-
-      - run:
-          command: scripts/test
+          command: |
+            scripts/py-dependencies
+            scripts/download_curves
+            scripts/test
 
       - save-cache:
           key: v2-download_curves.py-{{ checksum "data/vex/download_curves.py" }}
@@ -33,3 +27,26 @@ jobs:
       - store_artifacts:
           path: artifacts/
           destination: test
+
+  build_container:
+    docker:
+      - image: alpine
+
+    working_directory: /root/
+    steps:
+      - checkout
+
+      - setup-remote-docker
+
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.04.0-ce.tgz -C /usr/local/bin #https://get.docker.com/builds/
+
+      - run:
+          command: |
+            TAG=$CIRCLE_SHA1
+            docker build -t jaustinpage/frc_rekt:latest -t jaustinpage/frc_rekt:$TAG .
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push jaustinpage/frc_rekt:latest

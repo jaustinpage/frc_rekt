@@ -3,8 +3,8 @@
 set -e
 
 # create virtual environment
-python3 -m venv ./env
+python3 -m venv --system-site-packages ./env
 
 # install requirements
-env/bin/python3 -m pip install --upgrade pip 
+env/bin/python3 -m pip install --upgrade pip
 env/bin/python3 -m pip install -r requirements.txt
